@@ -91,7 +91,7 @@ footer {
 
 .loader {
     text-align: center;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     top: 0;
@@ -110,13 +110,10 @@ svg rect {
 div.container {
     display: flex;
     justify-content: center;
-
     height: 90vh;
     width: 100vw;
     margin-top: -80px;
     left: 0;
-
-
 }
 
 div.container a {
@@ -127,7 +124,6 @@ div.container a h1 {
     cursor: pointer;
     font-size: 2.5rem;
     margin-bottom: 20px;
-
 }
 
 div.container a h1 span {
@@ -139,27 +135,51 @@ div.container a h1 span {
 
 div.container div.menu {
     position: absolute;
-
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     height: 50vh;
     width: 50vw;
-    display: none;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    top: 50%;
-    transform: translateY(-50%);
     border-radius: 10px;
     box-shadow: 0 0 10px #2dabff;
     transition: all 0.3s ease;
     z-index: 9999;
 }
 
-div.play {
-    margin-top: 100px;
+div.container div.menu div.play{
     border: 1px solid #2dabff;
     padding: 10px 20px;
     border-radius: 25px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 75px;
+    margin-top: 50px;
+}
+
+div.pergunta {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 50vh;
+    width: 50vw;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #2dabff;
+    transition: all 0.3s ease;
+    z-index: 9999;
+}
+div.pergunta h5 {
+    display: none;
 }
 
 div.play #triangulo-para-direita {
@@ -172,18 +192,15 @@ div.play #triangulo-para-direita {
 
 }
 
-@media screen and (max-width: 1019px) {
-    div.container a {
-        border: 1px solid #2dabff;
-        align-items: left;
-        margin-left: -70%;
 
+@media screen and (max-width: 1160px) {
+    nav ul{
+        display: none;
     }
 
-    div.container a h1 span {
-        border: 1px solid #2dabff;
+    div.container a { 
         align-items: left;
-
+        margin-top: 50px;
     }
 
 }

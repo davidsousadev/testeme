@@ -24,9 +24,15 @@
     <header>
         <nav>
             <ul>
-                <a href="#"><li>Sobre</li></a>
-                <a href="#"><li>Contato</li></a>
-                <a href="#"><li>Login</li></a>
+                <a href="#">
+                    <li>Sobre</li>
+                </a>
+                <a href="#">
+                    <li>Contato</li>
+                </a>
+                <a href="#">
+                    <li>Login</li>
+                </a>
             </ul>
         </nav>
     </header>
@@ -53,21 +59,24 @@
     </div>
     <!-- Main Content -->
     <div class="container">
-        <a href="index.html"><h1>Teste <span>ME</span></h1></a>
+        <a href="index.html">
+            <h1>Teste <span>ME</span></h1>
+        </a>
         <div class="menu">
             <h2>Total de perguntas: <span>0</span></h2>
-            <a class="carregar" href="#" onclick="carregarPerguntas()">
-                <div class="play">
-                    <div id="triangulo-para-direita"></div>
-                </div>
-            </a>
-
-        </div>
+            <div class="play" onclick="carregarPerguntas()">
+                <div id="triangulo-para-direita"></div>
+            </div>
+        </div>  
+        <div class="pergunta">
+            <h5>Oi</h5>
+        </div>      
     </div>
 
     <!-- Footer -->
     <footer>
-        <p>Todos os direitos reservados.  > <a href="https://cutme.vercel.app/github" target="_blank">David Sousa</a> < </p>
+        <p>Todos os direitos reservados. <a href="https://cutme.vercel.app/github" target="_blank">David Sousa</a>
+            </p>
     </footer>
 </body>
 <script src="src/js/main.js" defer type="module"></script>
