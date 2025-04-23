@@ -1,6 +1,6 @@
 import * as Notify from 'https://libsme.vercel.app/src/notify/v3/index.js';
 
-//import * as API from './api.js';
+import * as API from './api.js';
 
 var totalPerguntas = 0;
 
