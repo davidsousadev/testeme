@@ -1,20 +1,10 @@
 {
   "version": 2,
-  "projects": {
-    "frontend": {
-      "rootDirectory": "web"
-    },
-    "backend": {
-      "rootDirectory": "api"
-    }
-  },
   "builds": [
     {
       "src": "web/package.json",
       "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
+      "config": { "distDir": "dist" }
     },
     {
       "src": "api/**/*.js",
@@ -22,14 +12,7 @@
     }
   ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/web/dist/$1"
-    }
-  ],
-  "ignoreCommand": "true"
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/web/dist/$1" }
+  ]
 }
