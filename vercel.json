@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "projects": [
+  "builds": [
     {
       "src": "web/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist"
+        "distDir": "web/dist"
       }
     }
   ]
