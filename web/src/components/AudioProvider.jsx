@@ -1,5 +1,7 @@
+// web/src/components/AudioProvider.jsx
 import { createContext, useEffect, useRef, useState } from "react";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AudioContext = createContext();
 
 export function AudioProvider({ children }) {
@@ -44,11 +46,10 @@ export function AudioProvider({ children }) {
       try {
         await audio.play();
       } catch {
-        // ⚙️ Obriga tocar ao interagir com qualquer elemento
         const handler = async () => {
           try {
             await audio.play();
-          } catch {}
+          } catch { /* empty */ }
           window.removeEventListener("click", handler);
         };
         window.addEventListener("click", handler);

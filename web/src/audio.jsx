@@ -6,14 +6,13 @@ const AudioContext = createContext(null);
 export function AudioProvider({ children, tracks = 4 }) {
   const audioRef = useRef(null);
   const [isOn, setIsOn] = useState(true);
-  const MIN_VOLUME = 0.2;
-  const MAX_VOLUME = 0.5;
+  const MIN_VOLUME = 0.1;
+  const MAX_VOLUME = 0.3;
   const TRACK_COUNT = tracks;
 
   const save = (k, v) => localStorage.setItem(k, v);
   const get = (k) => localStorage.getItem(k);
 
-  // pega track aleatória (não repetir se possível)
   const getRandomTrack = (exclude = "") => {
     let track;
     do {
@@ -23,7 +22,6 @@ export function AudioProvider({ children, tracks = 4 }) {
     return track;
   };
 
-  // alterna on/off
   const toggle = () => {
     setIsOn((s) => {
       const next = !s;
@@ -53,7 +51,7 @@ export function AudioProvider({ children, tracks = 4 }) {
 
     a.src = savedSrc;
     a.currentTime = savedTime;
-    a.loop = false; // controlamos mudança manualmente
+    a.loop = false;
     a.volume = isOn ? volume : 0;
 
     const tryPlay = async () => {
@@ -61,7 +59,7 @@ export function AudioProvider({ children, tracks = 4 }) {
         await a.play();
       } catch {
         const handler = async () => {
-          try { await a.play(); } catch {}
+          try { await a.play(); } catch { /* empty */ }
           window.removeEventListener("click", handler);
           window.removeEventListener("keydown", handler);
           window.removeEventListener("touchstart", handler);
@@ -79,7 +77,7 @@ export function AudioProvider({ children, tracks = 4 }) {
       a.src = next;
       save("lastTrack", next);
       a.currentTime = 0;
-      a.play().catch(() => {});
+      a.play().catch(() => { });
     };
     a.addEventListener("ended", handleEnded);
 
@@ -87,7 +85,7 @@ export function AudioProvider({ children, tracks = 4 }) {
       if (document.hidden) {
         a.pause();
       } else if (isOn) {
-        a.play().catch(() => {});
+        a.play().catch(() => { });
       }
     };
     document.addEventListener("visibilitychange", visibilityHandler);
@@ -126,6 +124,7 @@ export function AudioProvider({ children, tracks = 4 }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAudio() {
   const ctx = useContext(AudioContext);
   if (!ctx) throw new Error("useAudio must be used within AudioProvider");

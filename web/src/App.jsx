@@ -1,19 +1,26 @@
+// web/src/App.jsx
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AudioProvider } from "./components/AudioProvider.jsx";
 import Header from "./components/Header.jsx";
-import Player from "./components/Player.jsx";
+
+import CardList from "./components/CardList.jsx";
+import DesafioPage from "./components/DesafioPage.jsx";
 import "./App.css";
 
 export default function App() {
   return (
     <AudioProvider>
-      <div className="app-container">
-        <Header />
-        <main className="main-content">
-          <h1 className="title">🎮 Teste Me</h1>
-          <p className="subtitle">Seu desafio diário</p>
-          <Player />
-        </main>
-      </div>
+      <Router>
+        <div className="app-container">
+          <Header />
+          <main className="main-content">
+            <Routes>
+              <Route path="/" element={<CardList />} />
+              <Route path="/desafio/:id" element={<DesafioPage />} />
+            </Routes>
+          </main>
+        </div>
+      </Router>
     </AudioProvider>
   );
 }
