@@ -31,7 +31,7 @@ export default function Header() {
         const res = await fetch(`${API_BASE}/score`);
         if (!res.ok) throw new Error("Erro ao carregar o score");
         const data = await res.json();
-        setScore(data.score);
+        setScore(data.value);
       } catch (err) {
         console.error(err);
         setScore(0);
