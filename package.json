@@ -1,0 +1,9 @@
+{
+    "name": "testeme",
+    "version": "1.0.0",
+    "type": "module",
+    "dependencies": {
+        "dotenv": "^17.2.3",
+        "express": "^5.1.0"
+    }
+}
