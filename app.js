@@ -4,7 +4,7 @@ async function loadScore() {
     try {
         resultDiv.innerHTML = "<em>Carregando variáveis...</em>";
        
-        const envRes = await fetch("/api/env");
+        const envRes = await fetch("https://apisme.vercel.app/testeme");
         const envData = await envRes.json();
 
         const API_URL = envData.API_URL;
