@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - TesteMe</title>
+    <link rel="stylesheet" href="/src/styles/dashboard.css">
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html"><img src="/src/images/icon.ico" alt="icone"></a>
+        <h2>Bem-vindo(a), <span id="userNick"></span></h2>
+        <button id="logoutBtn">Sair</button>
+    </nav>
+
+    <main class="dashboard-container">
+
+        <!-- SCORE -->
+        <section class="card" id="scoreBox">
+            <h3>Seu Score Atual</h3>
+            <p id="scoreValue">Carregando...</p>
+        </section>
+
+        <!-- OPERAÇÕES -->
+        <section class="card" id="operacoesBox">
+            <h3>Suas Operações</h3>
+
+            <table class="table" id="tabelaOperacoes">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Valor</th>
+                        <th>Descrição</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+
+                <tbody id="operacoesLista">
+                    <tr>
+                        <td colspan="4">Carregando...</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+    </main>
+
+    <script src="/src/scripts/dashboard.js" type="module"></script>
+
+</body>
+
+</html>
