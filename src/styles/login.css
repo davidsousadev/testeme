@@ -24,14 +24,14 @@ nav img {
 
 input {
     width: 100%;
-    margin: 8px 0;
+    margin: 8px 0 10px -8px;
     padding: 10px;
     border-radius: 4px;
     border: 1px solid #bbb;
 }
 
 button {
-    width: 100%;
+    width: 50%;
     padding: 12px;
     background: #43af70;
     color: white;
@@ -86,4 +86,38 @@ button:hover {
 
 .badge.error {
     background: #f44336;
+}
+
+a.btn_cadastrar {
+    text-decoration: none;
+    margin: 10px auto;
+    display: flex;
+    width: 50%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.input-container {
+    position: relative;
+    /* width: 100%; */
+}
+
+.input-container input {
+    width: 100%;
+    
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 55%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.toggle-password img {
+    width: 20px;
+    height: 20px;
 }

@@ -9,7 +9,7 @@
 
 <body>
     <nav>
-        <a href="index.html"><img src="/src/images/icon.ico"></a>
+        <a href="index.html"><img src="/src/images/icones/icon.ico"></a>
     </nav>
 
     <div class="login-container">
@@ -17,14 +17,22 @@
 
         <form id="formLogin">
             <input type="text" id="nick" placeholder="Seu nick" required>
-            <input type="password" id="password" placeholder="Sua senha" required>
+            <div class="input-container">
+                <input type="password" id="password" placeholder="Sua senha" required>
+                <span class="toggle-password">
+                    <img id="eyeIcon" src="/src/images/icones/eye-off.svg" alt="Mostrar senha">
+                </span>
+
+            </div>
 
             <button type="submit">Logar</button>
         </form>
-        <a href="cadastrar.html">Cadastrar</a>
+        <a href="cadastrar.html" class="btn_cadastrar">Cadastrar</a>
     </div>
 
     <script type="module" src="/src/scripts/login.js" defer></script>
+
+
 </body>
 
 </html>

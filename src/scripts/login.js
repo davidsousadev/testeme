@@ -14,7 +14,23 @@ if (access_token && refresh_token) {
     setTimeout(() => {
         window.location.href = "index.html";
     }, 1);
- }
+}
+const passwordInput = document.getElementById("password");
+const eyeIcon = document.getElementById("eyeIcon");
+
+document.querySelector(".toggle-password")
+    .addEventListener("click", () => {
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            eyeIcon.src = "/src/images/icones/eye.svg";
+        } else {
+            passwordInput.type = "password";
+            eyeIcon.src = "/src/images/icones/eye-off.svg";
+        }
+
+    });
+
 
 document.getElementById("formLogin").addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -41,7 +57,7 @@ document.getElementById("formLogin").addEventListener("submit", async (event) =>
             });
             return;
         }
-        else if (data.access_token){
+        else if (data.access_token) {
             // Salvar tokens nos cookies
             document.cookie = `access_token=${data.access_token}; path=/; max-age=86400;`;
             document.cookie = `refresh_token=${data.refresh_token}; path=/; max-age=2592000;`;
@@ -60,10 +76,10 @@ document.getElementById("formLogin").addEventListener("submit", async (event) =>
             }, 800);
 
         }
-        
+
     } catch (err) {
         console.error(err);
-        mostrarNotificacao(`xxx`, {
+        mostrarNotificacao(`${data.detail}`, {
             cor: "#43af70ff",
             duracao: 4000,
             movimentoEntrada: "deslizar",

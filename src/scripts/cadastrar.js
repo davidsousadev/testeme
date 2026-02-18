@@ -41,3 +41,25 @@ document.getElementById("formCadastrar").addEventListener("submit", async (event
         mostrarNotificacao("Erro ao conectar ao servidor", { cor: "#c93030" });
     }
 });
+
+document.querySelectorAll(".toggle-password").forEach(toggle => {
+
+    toggle.addEventListener("click", () => {
+
+        const inputId = toggle.getAttribute("data-target");
+        const input = document.getElementById(inputId);
+        const icon = toggle.querySelector("img");
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.src = "/src/images/icones/eye.svg";
+            icon.alt = "Ocultar senha";
+        } else {
+            input.type = "password";
+            icon.src = "/src/images/icones/eye-off.svg";
+            icon.alt = "Mostrar senha";
+        }
+
+    });
+
+});

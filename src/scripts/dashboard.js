@@ -71,15 +71,15 @@ async function carregarOperacoes(user) {
         // ---------------------
         if (!Array.isArray(data)) {
             tbody.innerHTML = `<tr><td colspan='4'>${data.detail || "Erro inesperado"}</td></tr>`;
-
-            mostrarNotificacao(data.detail || "Erro inesperado na API", {
-                cor: "#ff0000ff",
-                duracao: 4000,
-                movimentoEntrada: "deslizar",
-                movimentoSaida: "esvair",
-                posicao: "top-right"
-            });
-
+            if (data.length !== 0 && data.detail !== "Nenhuma operacão encontrada!" ) {
+                mostrarNotificacao(data.detail || "Erro inesperado na API", {
+                    cor: "#ff0000ff",
+                    duracao: 4000,
+                    movimentoEntrada: "deslizar",
+                    movimentoSaida: "esvair",
+                    posicao: "top-right"
+                });
+            }
             return;
         }
 
