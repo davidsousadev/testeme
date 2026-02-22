@@ -69,7 +69,6 @@ async function carregarDesafios() {
 // ===============================
 
 function definirClasseTempo(segundos) {
-
     if (segundos <= 60) return "verde";
     if (segundos <= 120) return "azul";
     if (segundos <= 180) return "vermelho";
@@ -86,7 +85,9 @@ function criarCardDesafio(desafio) {
     const li = document.createElement("li");
 
     li.dataset.id = desafio.id;
-    li.dataset.created = desafio.created_at;
+
+    // ✅ Garantir UTC explícito
+    li.dataset.created = garantirUTC(desafio.created_at);
 
     atualizarVisualCard(li, desafio);
 
@@ -96,8 +97,20 @@ function criarCardDesafio(desafio) {
 }
 
 // ===============================
+// GARANTIR UTC ISO
+// ===============================
+
+function garantirUTC(dataString) {
+    if (!dataString.endsWith("Z") && !dataString.includes("+")) {
+        return dataString + "Z";
+    }
+    return dataString;
+}
+
+// ===============================
 // EXPANDIR CARD
 // ===============================
+
 function expandirCard(li, id) {
 
     if (cardAberto && cardAberto !== li) {
@@ -123,6 +136,7 @@ function expandirCard(li, id) {
     `;
 
     const btn = li.querySelector(".btn-coletar");
+
     if (desafio.coletado) {
         btn.disabled = true;
         btn.textContent = "Já coletado";
@@ -139,6 +153,7 @@ function expandirCard(li, id) {
 // ===============================
 // COLETAR RECOMPENSA
 // ===============================
+
 async function coletarRecompensa(id, botao, li) {
 
     try {
@@ -150,15 +165,15 @@ async function coletarRecompensa(id, botao, li) {
         const data = await response.json();
 
         if (!response.ok) {
-            // Mostrar notificação amigável, sem logar URL no console
+
             mostrarNotificacao(data.detail || "Erro desconhecido", "error");
 
-            // Desabilita botão se já coletado
             if (data.detail === "Recompensa já coletada.") {
                 botao.disabled = true;
                 botao.textContent = "Já coletado";
                 li.classList.add("expirado");
             }
+
             return;
         }
 
@@ -167,12 +182,10 @@ async function coletarRecompensa(id, botao, li) {
             "success"
         );
 
-        // Atualizar card localmente sem recarregar toda a lista
         li.classList.add("expirado");
         botao.disabled = true;
         botao.textContent = "Coletado";
 
-        // Atualiza score global (se tiver elemento de score)
         const scoreSpan = document.getElementById("scoreUsuario");
         if (scoreSpan) scoreSpan.textContent = data.novo_score;
 
@@ -182,15 +195,17 @@ async function coletarRecompensa(id, botao, li) {
     }
 }
 
-
 // ===============================
-// ATUALIZAR VISUAL
+// ATUALIZAR VISUAL (UTC REAL)
 // ===============================
 
 function atualizarVisualCard(li, desafio) {
 
-    const criadoEm = new Date(desafio?.created_at || li.dataset.created);
-    const agora = new Date();
+    const criadoEm = new Date(
+        garantirUTC(desafio?.created_at || li.dataset.created)
+    ).getTime();
+
+    const agora = Date.now(); // ✅ UTC absoluto
 
     const segundos = (agora - criadoEm) / 1000;
     const classe = definirClasseTempo(segundos);
@@ -212,7 +227,7 @@ function atualizarVisualCard(li, desafio) {
 }
 
 // ===============================
-// TIMER GLOBAL
+// TIMER GLOBAL (UTC REAL)
 // ===============================
 
 function iniciarTimerGlobal() {
@@ -223,8 +238,11 @@ function iniciarTimerGlobal() {
 
         document.querySelectorAll("#listaDesafios li").forEach(li => {
 
-            const criadoEm = new Date(li.dataset.created);
-            const agora = new Date();
+            const criadoEm = new Date(
+                garantirUTC(li.dataset.created)
+            ).getTime();
+
+            const agora = Date.now(); // ✅ UTC absoluto
 
             const segundos = (agora - criadoEm) / 1000;
             const classe = definirClasseTempo(segundos);
@@ -234,7 +252,6 @@ function iniciarTimerGlobal() {
                 : classe;
 
             const timerDiv = li.querySelector(".timer");
-
             const tempoRestante = Math.max(0, 240 - segundos);
 
             if (timerDiv) {
@@ -259,4 +276,4 @@ function formatarTempo(segundos) {
     const restoSeg = Math.floor(segundos % 60);
 
     return `${minutos}:${restoSeg.toString().padStart(2, "0")}`;
-}
+}4
