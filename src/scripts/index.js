@@ -276,4 +276,4 @@ function formatarTempo(segundos) {
     const restoSeg = Math.floor(segundos % 60);
 
     return `${minutos}:${restoSeg.toString().padStart(2, "0")}`;
-}4
+} 4
