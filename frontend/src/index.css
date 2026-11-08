@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --rpg-bg: #0f172a;
+    --rpg-panel: #1e293b;
+    --rpg-panel-border: #334155;
+    --rpg-gold: #fbbf24;
+    --rpg-emerald: #10b981;
+    --rpg-ruby: #ef4444;
+    --rpg-sapphire: #3b82f6;
+    --rpg-amethyst: #a855f7;
+  }
+
+  html, body, #root {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--rpg-bg);
+    color: #f1f5f9;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+  }
+
+  #root {
+    display: flex;
+    flex-direction: column;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  button, input, select, textarea {
+    font-family: inherit;
+  }
+
+  ::selection {
+    background: var(--rpg-gold);
+    color: #0f172a;
+  }
+}
+
+@layer components {
+  .rpg-panel {
+    @apply bg-[#1e293b] border border-[#334155] rounded-xl shadow-lg;
+  }
+
+  .rpg-btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 border border-transparent disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .rpg-btn-primary {
+    @apply rpg-btn bg-[#fbbf24] text-[#0f172a] hover:bg-[#fcd34d] active:scale-[0.97];
+  }
+
+  .rpg-btn-outline {
+    @apply rpg-btn border-[#334155] text-[#e2e8f0] hover:bg-[#334155];
+  }
+
+  .rpg-btn-danger {
+    @apply rpg-btn bg-[#ef4444] text-white hover:bg-[#dc2626];
+  }
+
+  .rpg-input {
+    @apply w-full bg-[#0f172a] border border-[#475569] rounded-lg px-3 py-2 text-white placeholder-[#64748b] focus:outline-none focus:border-[#fbbf24] focus:ring-1 focus:ring-[#fbbf24] transition-all;
+  }
+
+  .xp-bar {
+    @apply w-full bg-[#334155] rounded-full h-2.5 overflow-hidden border border-[#475569];
+  }
+
+  .xp-fill {
+    @apply bg-gradient-to-r from-[#fbbf24] to-[#10b981] h-full rounded-full transition-all duration-500;
+  }
+
+  .rarity-badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider;
+  }
+
+  .game-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: linear-gradient(#1e3a5f, #0f172a);
+  }
+
+  .touch-btn {
+    @apply bg-[#334155]/60 backdrop-blur-sm border border-[#475569]/50 rounded-lg text-white active:scale-95 transition-transform;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
