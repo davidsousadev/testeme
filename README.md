@@ -59,7 +59,7 @@ cd /home/david/Documentos/davidsousadev/testeme/frontend
 
 npm install
 
-cp .env.example .env   # ajuste VITE_API_URL se necessário
+# cp .env.example .env   # ajuste VITE_API_URL se necessário
 
 npm run dev            # http://127.0.0.1:5173
 

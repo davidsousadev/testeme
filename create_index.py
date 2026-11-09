@@ -1,0 +1,121 @@
+#!/usr/bin/env python3
+import os
+
+os.makedirs('/home/david/Documentos/davidsousadev/testeme', exist_ok=True)
+
+html_content = r"""<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TestMe - Mundo do Conhecimento</title>
+    <link rel="stylesheet" href="/styles/game.css">
+    <link rel="icon" href="/src/images/icones/icon.ico" type="image/x-icon">
+</head>
+
+<body>
+    <nav>
+        <a href="/">
+            <img src="/src/images/icones/icon.ico" alt="TestMe Logo">
+            <span>TestMe</span>
+        </a>
+        <div id="nav-right">
+            <!-- Auth buttons will be injected by JS -->
+        </div>
+    </nav>
+
+    <main>
+        <div id="auth-screen" class="screen">
+            <div class="auth-card">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Login</button>
+                    <button class="auth-tab" data-tab="register">Cadastro</button>
+                </div>
+                
+                <form id="auth-form">
+                    <input type="text" id="nick-input" placeholder="Nick" required>
+                    <input type="password" id="password-input" placeholder="Senha" required>
+                    
+                    <div id="auth-switch-field" style="display:none;">
+                        <input type="email" id="email-input" placeholder="E-mail">
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Entrar</button>
+                </form>
+                
+                <div class="auth-links">
+                    <a id="switch-tab">Cadastro</a>
+                    <a id="forgot-password">Esqueci minha senha</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen hidden">
+            <div class="hud">
+                <div class="hud-element">
+                    <span>XP: <strong id="hud-xp">0</strong> / <strong id="hud-xp-next">100</strong></span>
+                </div>
+                <div class="hud-element">
+                    <span>Nível: <strong id="hud-level">1</strong></span>
+                </div>
+                <div class="hud-element">
+                    <span>Moedas: <strong id="hud-coins">0</strong></span>
+                </div>
+                <div class="hud-element">
+                    <span>Nome: <strong id="hud-name">Jogador</strong></span>
+                </div>
+            </div>
+
+            <div id="game-world" class="game-world">
+                <div id="modal-spot" class="modal-spot hidden">
+                    <div class="modal-spot-content">
+                        <h3 id="modal-spot-title"></h3>
+                        <p id="modal-spot-desc"></p>
+                        <button class="btn-close" onclick="closeSpotModal()">×</button>
+                    </div>
+                </div>
+
+                <canvas id="game-canvas"></canvas>
+                
+                <div id="modal-activity" class="modal-activity hidden">
+                    <div class="modal-activity-content">
+                        <h3 id="modal-activity-title"></h3>
+                        <p id="modal-activity-category"></p>
+                        <div id="modal-activity-content"></div>
+                        <div class="modal-activity-result hidden">
+                            <p id="modal-result-text"></p>
+                            <p id="modal-earned"></p>
+                            <button onclick="closeActivityModal()">Continuar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="status" class="status"></div>
+
+                <div class="controls">
+                    <span>WASD / Setas · Mover</span>
+                    <span class="px-2 py-0.5 rounded bg-[#334155] border border-[#475569]">E / Espaço · Interagir</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="ranking-screen" class="screen hidden">
+            <div class="ranking-container">
+                <button onclick="hideScreen('ranking-screen')">← Voltar</button>
+                <h2>Ranking Global</h2>
+                <div id="ranking-list">
+                    <!-- Ranking cards will be injected -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="/src/scripts/game.js"></script>
+</body>
+</html>"""
+
+with open('/home/david/Documentos/davidsousadev/testeme/index.html', 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print("index.html criado com sucesso")
