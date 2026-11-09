@@ -1,111 +1,168 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TestMe - Mundo do Conhecimento</title>
-    <link rel="stylesheet" href="/styles/game.css">
-    <link rel="icon" href="/src/images/icones/icon.ico" type="image/x-icon">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101b2a">
+  <meta name="testme-api" content="https://apisme.vercel.app/testeme">
+  <title>TestMe — Mundo do Conhecimento</title>
+  <link rel="icon" href="/src/images/icones/icon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/styles/game.css">
+  <script src="/src/scripts/game.js" defer></script>
 </head>
-
 <body>
-    <nav>
-        <a href="/">
-            <img src="/src/images/icones/icon.ico" alt="TestMe Logo">
-            <span>TestMe</span>
-        </a>
-        <div id="nav-right">
-            <!-- Auth buttons will be injected by JS -->
+  <div class="app-noise" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="TestMe - início">
+      <span class="brand-mark">T</span>
+      <span>Test<span>Me</span><small>MUNDO DO CONHECIMENTO</small></span>
+    </a>
+    <div class="topbar-right">
+      <span class="connection-pill" id="connectionStatus"><i></i> Conectando à API</span>
+      <div class="top-user hidden" id="topUser">
+        <span class="top-avatar" id="topAvatar">✦</span>
+        <span id="topNick">Aventureiro</span>
+        <button class="button button-quiet button-small" id="logoutButton" type="button">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="auth-screen" id="authScreen">
+      <div class="auth-hero">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> APRENDER É UMA AVENTURA</div>
+        <h1>Seu próximo nível começa com <em>conhecimento.</em></h1>
+        <p>Explore o mapa, descubra pontos de desafio, resolva questões e evolua seu personagem. Cada resposta certa é uma conquista no Mundo do Conhecimento.</p>
+        <div class="hero-stats">
+          <div><strong>10+</strong><span>pontos de atividade</span></div>
+          <div><strong>5</strong><span>níveis de raridade</span></div>
+          <div><strong>∞</strong><span>novas descobertas</span></div>
         </div>
-    </nav>
+        <div class="hero-landscape" aria-hidden="true">
+          <div class="hero-moon"></div><div class="hero-mountain mountain-back"></div><div class="hero-mountain mountain-front"></div>
+          <div class="hero-castle">♜</div><div class="hero-path"></div>
+        </div>
+      </div>
 
-    <main>
-        <div id="auth-screen" class="screen">
-            <div class="auth-card">
-                <div class="auth-tabs">
-                    <button class="auth-tab active" data-tab="login">Login</button>
-                    <button class="auth-tab" data-tab="register">Cadastro</button>
-                </div>
-                
-                <form id="auth-form">
-                    <input type="text" id="nick-input" placeholder="Nick" required>
-                    <input type="password" id="password-input" placeholder="Senha" required>
-                    
-                    <div id="auth-switch-field" style="display:none;">
-                        <input type="email" id="email-input" placeholder="E-mail">
-                    </div>
-                    
-                    <button type="submit" class="btn-primary">Entrar</button>
-                </form>
-                
-                <div class="auth-links">
-                    <a id="switch-tab">Cadastro</a>
-                    <a id="forgot-password">Esqueci minha senha</a>
-                </div>
-            </div>
+      <div class="auth-card-wrap">
+        <div class="auth-card">
+          <div class="auth-card-head">
+            <span class="card-kicker">PORTAL DE ACESSO</span>
+            <h2 id="authTitle">Bem-vindo de volta</h2>
+            <p id="authSubtitle">Entre para continuar sua jornada.</p>
+          </div>
+          <div class="auth-tabs" role="tablist" aria-label="Acesso">
+            <button class="auth-tab active" type="button" role="tab" aria-selected="true" data-auth-tab="login">Entrar</button>
+            <button class="auth-tab" type="button" role="tab" aria-selected="false" data-auth-tab="register">Criar conta</button>
+          </div>
+
+          <form id="loginForm" class="auth-form">
+            <label for="loginNick">Nick de aventureiro</label>
+            <input id="loginNick" name="nick" type="text" autocomplete="username" placeholder="Seu nick" required maxlength="40">
+            <label for="loginPassword">Senha</label>
+            <input id="loginPassword" name="password" type="password" autocomplete="current-password" placeholder="Sua senha" required>
+            <button class="button button-primary button-full" type="submit"><span>Entrar no mundo</span><b>→</b></button>
+          </form>
+
+          <form id="registerForm" class="auth-form hidden">
+            <label for="registerName">Nome do jogador</label>
+            <input id="registerName" name="name" type="text" autocomplete="name" placeholder="Como devemos chamar você?" required maxlength="80">
+            <label for="registerNick">Nick de aventureiro</label>
+            <input id="registerNick" name="nick" type="text" autocomplete="username" placeholder="Escolha um nick" required maxlength="40">
+            <label for="registerEmail">E-mail <span class="optional">opcional</span></label>
+            <input id="registerEmail" name="email" type="email" autocomplete="email" placeholder="voce@exemplo.com">
+            <label for="registerPassword">Senha</label>
+            <input id="registerPassword" name="password" type="password" autocomplete="new-password" placeholder="Mínimo de 8 caracteres" required minlength="8">
+            <label for="registerPasswordConfirm">Confirmar senha</label>
+            <input id="registerPasswordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" placeholder="Digite a senha novamente" required minlength="8">
+            <button class="button button-primary button-full" type="submit"><span>Criar personagem</span><b>→</b></button>
+          </form>
+          <p class="auth-footnote"><span>✦</span> Seu progresso é salvo no servidor.</p>
+        </div>
+        <p class="auth-version">TESTME <span>•</span> VERSÃO WEB</p>
+      </div>
+    </section>
+
+    <section class="game-screen hidden" id="gameScreen">
+      <aside class="player-panel panel">
+        <div class="player-identity">
+          <div class="player-avatar" id="playerAvatar">✦</div>
+          <div><span class="muted-label">AVENTUREIRO</span><h2 id="playerName">Carregando...</h2><span class="player-nick" id="playerNick">@nick</span></div>
+        </div>
+        <div class="level-row"><span>NÍVEL <strong id="playerLevel">1</strong></span><span id="xpLabel">0 / 316 XP</span></div>
+        <div class="xp-track"><span id="xpBar"></span></div>
+        <div class="currency-row">
+          <div><span class="currency-icon xp-icon">✧</span><span><strong id="playerXp">0</strong><small>EXPERIÊNCIA</small></span></div>
+          <div><span class="currency-icon coin-icon">◈</span><span><strong id="playerCoins">0</strong><small>MOEDAS</small></span></div>
+        </div>
+        <div class="panel-divider"></div>
+        <div class="quick-stats">
+          <div><span>Atividades concluídas</span><strong id="activitiesDone">0</strong></div>
+          <div><span>Conquistas</span><strong id="achievementsDone">0</strong></div>
+        </div>
+        <div class="panel-divider"></div>
+        <div class="panel-section-title"><span>ATALHOS</span></div>
+        <button class="side-action active" type="button" data-view="world"><span>⌖</span> Explorar mundo</button>
+        <button class="side-action" type="button" data-view="ranking"><span>♛</span> Ranking global</button>
+        <button class="side-action" type="button" data-view="history"><span>▤</span> Meu histórico</button>
+        <div class="player-panel-bottom"><span class="online-dot"></span> Mundo do Conhecimento <span class="build-tag">MVP</span></div>
+      </aside>
+
+      <section class="main-stage">
+        <div class="stage-heading">
+          <div><span class="eyebrow"><span class="eyebrow-dot"></span> REGIÃO INICIAL</span><h1 id="stageTitle">Bosque das Descobertas</h1><p id="stageSubtitle">Explore, encontre um spot e coloque seu conhecimento à prova.</p></div>
+          <div class="stage-actions"><button class="button button-outline" id="refreshWorld" type="button">↻ Atualizar mundo</button><button class="icon-button" id="helpButton" type="button" aria-label="Ajuda">?</button></div>
         </div>
 
-        <div id="game-screen" class="screen hidden">
-            <div class="hud">
-                <div class="hud-element">
-                    <span>XP: <strong id="hud-xp">0</strong> / <strong id="hud-xp-next">100</strong></span>
-                </div>
-                <div class="hud-element">
-                    <span>Nível: <strong id="hud-level">1</strong></span>
-                </div>
-                <div class="hud-element">
-                    <span>Moedas: <strong id="hud-coins">0</strong></span>
-                </div>
-                <div class="hud-element">
-                    <span>Nome: <strong id="hud-name">Jogador</strong></span>
-                </div>
+        <section class="world-view" id="worldView">
+          <div class="world-toolbar"><div><span class="world-live-dot"></span> MUNDO ONLINE <span class="toolbar-separator">/</span> REGIÃO 01</div><div class="map-legend"><span><i class="legend-dot common"></i> Comum</span><span><i class="legend-dot rare"></i> Raro+</span><span><i class="legend-dot npc"></i> NPC</span></div></div>
+          <div class="world-viewport" id="worldViewport" tabindex="0" aria-label="Mapa explorável. Use WASD ou as setas para mover o personagem.">
+            <div class="world-map" id="worldMap">
+              <div class="map-river river-one"></div><div class="map-river river-two"></div>
+              <div class="map-forest forest-one"></div><div class="map-forest forest-two"></div><div class="map-forest forest-three"></div>
+              <div class="map-clearing clearing-one"></div><div class="map-clearing clearing-two"></div>
+              <div class="map-road road-one"></div><div class="map-road road-two"></div>
+              <div class="map-ruins ruins-one"><span>⌂</span></div><div class="map-ruins ruins-two"><span>⌂</span></div>
+              <div class="map-label label-vila">VILA DO SABER</div><div class="map-label label-bosque">BOSQUE ANTIGO</div><div class="map-label label-ruinas">RUÍNAS DA LÓGICA</div>
+              <div id="worldObjects"></div>
+              <div class="player-token" id="playerToken" aria-label="Seu personagem"><span class="player-token-shadow"></span><span class="player-token-body">♟</span><span class="player-token-name" id="mapPlayerName">Você</span></div>
             </div>
+          </div>
+          <div class="world-footer"><div class="nearby-info"><span class="nearby-icon">⌖</span><div><strong id="nearbyTitle">Explore o mapa</strong><span id="nearbyText">Aproxime-se de um ponto de atividade ou NPC.</span></div></div><button class="button button-primary" id="interactButton" type="button" disabled>Interagir <kbd>E</kbd></button></div>
+          <div class="movement-hint"><span>⌨ WASD / SETAS <small>MOVER</small></span><span><kbd>E</kbd> <small>INTERAGIR</small></span><span><kbd>ESC</kbd> <small>FECHAR</small></span><span class="mobile-hint">Use os controles na tela para mover.</span></div>
+          <div class="mobile-controls" aria-label="Controles de movimento">
+            <button type="button" data-move="up" aria-label="Mover para cima">▲</button>
+            <div><button type="button" data-move="left" aria-label="Mover para esquerda">◀</button><button type="button" data-move="down" aria-label="Mover para baixo">▼</button><button type="button" data-move="right" aria-label="Mover para direita">▶</button></div>
+          </div>
+        </section>
 
-            <div id="game-world" class="game-world">
-                <div id="modal-spot" class="modal-spot hidden">
-                    <div class="modal-spot-content">
-                        <h3 id="modal-spot-title"></h3>
-                        <p id="modal-spot-desc"></p>
-                        <button class="btn-close" onclick="closeSpotModal()">×</button>
-                    </div>
-                </div>
+        <section class="data-view hidden" id="rankingView"><div class="data-card"><div class="data-card-header"><div><span class="card-kicker">OS MAIS EXPERIENTES</span><h2>Ranking global</h2><p>Quem está evoluindo no Mundo do Conhecimento.</p></div><span class="trophy-mark">♛</span></div><div id="rankingList" class="ranking-list"><div class="loading-line">Carregando classificação...</div></div></div></section>
+        <section class="data-view hidden" id="historyView"><div class="data-card"><div class="data-card-header"><div><span class="card-kicker">SUA JORNADA</span><h2>Histórico de atividades</h2><p>Confira suas últimas tentativas e recompensas.</p></div><span class="history-mark">▤</span></div><div id="historyList" class="history-list"><div class="loading-line">Carregando histórico...</div></div></div></section>
+      </section>
 
-                <canvas id="game-canvas"></canvas>
-                
-                <div id="modal-activity" class="modal-activity hidden">
-                    <div class="modal-activity-content">
-                        <h3 id="modal-activity-title"></h3>
-                        <p id="modal-activity-category"></p>
-                        <div id="modal-activity-content"></div>
-                        <div class="modal-activity-result hidden">
-                            <p id="modal-result-text"></p>
-                            <p id="modal-earned"></p>
-                            <button onclick="closeActivityModal()">Continuar</button>
-                        </div>
-                    </div>
-                </div>
+      <aside class="quest-panel panel">
+        <div class="quest-header"><div><span class="muted-label">GUIA DE EXPLORAÇÃO</span><h2>O que fazer?</h2></div><span class="compass-icon">✥</span></div>
+        <div class="quest-card main-quest"><div class="quest-icon">⚑</div><div><span class="quest-tag">MISSÃO INICIAL</span><h3>Primeiros passos</h3><p>Encontre um spot disponível e conclua uma atividade para ganhar XP.</p><div class="quest-progress"><span id="firstQuestProgress"></span></div><small id="firstQuestLabel">0/1 atividade concluída</small></div></div>
+        <div class="quest-divider"></div>
+        <div class="panel-section-title"><span>PONTOS PRÓXIMOS</span><button id="focusNearest" type="button" class="text-button">Localizar</button></div>
+        <div id="nearbySpots" class="nearby-spots"><div class="empty-note">Carregando pontos...</div></div>
+        <div class="quest-divider"></div>
+        <div class="panel-section-title"><span>PERSONAGENS DO MUNDO</span></div>
+        <div id="npcList" class="npc-list"><div class="empty-note">Procurando habitantes...</div></div>
+        <div class="quest-panel-tip"><span>✦</span><p>Dica: spots raros oferecem recompensas maiores, mas podem exigir mais conhecimento.</p></div>
+      </aside>
+    </section>
+  </main>
 
-                <div id="status" class="status"></div>
+  <div class="modal-backdrop hidden" id="activityModal" role="dialog" aria-modal="true" aria-labelledby="activityTitle">
+    <div class="modal-card activity-card"><button class="modal-close" type="button" data-close-modal aria-label="Fechar">×</button><div class="modal-topline"><span class="card-kicker">DESAFIO DE CONHECIMENTO</span><span class="difficulty-pill" id="activityDifficulty">FÁCIL</span></div><h2 id="activityTitle">Atividade</h2><p class="activity-category" id="activityCategory"></p><div class="activity-question" id="activityQuestion"></div><form id="answerForm"><div id="answerOptions" class="answer-options"></div><div id="openAnswerWrap" class="hidden"><label for="openAnswer">Sua resposta</label><input id="openAnswer" type="text" autocomplete="off" placeholder="Digite sua resposta"></div><button class="button button-primary button-full" id="submitAnswer" type="submit">Confirmar resposta <b>→</b></button></form><div id="activityResult" class="activity-result hidden"></div><button class="button button-outline button-full hidden" id="continueButton" type="button">Continuar explorando</button></div>
+  </div>
 
-                <div class="controls">
-                    <span>WASD / Setas · Mover</span>
-                    <span class="px-2 py-0.5 rounded bg-[#334155] border border-[#475569]">E / Espaço · Interagir</span>
-                </div>
-            </div>
-        </div>
+  <div class="modal-backdrop hidden" id="dialogModal" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="modal-card dialog-card"><button class="modal-close" type="button" data-close-modal aria-label="Fechar">×</button><div class="npc-portrait" id="dialogAvatar">✦</div><span class="card-kicker">HABITANTE DO MUNDO</span><h2 id="dialogTitle">Personagem</h2><p id="dialogText"></p><button class="button button-primary button-full" type="button" data-close-modal>Entendi</button></div></div>
 
-        <div id="ranking-screen" class="screen hidden">
-            <div class="ranking-container">
-                <button onclick="hideScreen('ranking-screen')">← Voltar</button>
-                <h2>Ranking Global</h2>
-                <div id="ranking-list">
-                    <!-- Ranking cards will be injected -->
-                </div>
-            </div>
-        </div>
-    </main>
+  <div class="modal-backdrop hidden" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle"><div class="modal-card dialog-card"><button class="modal-close" type="button" data-close-modal aria-label="Fechar">×</button><span class="card-kicker">GUIA RÁPIDO</span><h2 id="helpTitle">Como jogar</h2><div class="help-steps"><p><kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> ou as setas movem seu personagem pelo mapa.</p><p>Aproxime-se de um spot brilhante para habilitar a interação.</p><p>Pressione <kbd>E</kbd> ou clique em <strong>Interagir</strong> para iniciar uma atividade.</p><p>Responda corretamente para receber XP, moedas e evoluir seu personagem. O tempo de regeneração dos spots é controlado pelo servidor.</p></div><button class="button button-primary button-full" type="button" data-close-modal>Vamos jogar</button></div></div>
 
-    <script type="module" src="/src/scripts/game.js"></script>
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+  <footer class="app-footer"><span>TESTME © <span id="currentYear"></span></span><span>APRENDER TAMBÉM É EXPLORAR</span></footer>
 </body>
 </html>

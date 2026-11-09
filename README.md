@@ -1,143 +1,121 @@
-# 🧠 TestMe — Plataforma de Aprendizagem Gamificada
+# TestMe — Mundo do Conhecimento
 
-> Estudar como parte da experiência de jogar. O TestMe combina referências de **Duolingo** (progressão, XP, níveis, recompensas), **Albion Online** (mundo explorável, mapa, pontos de coleta/spots, respawn, disputa por recursos) e **RPG multiplayer** (rankings, missões, desafios, economia, NPCs e bots).
+Plataforma web de aprendizagem gamificada. O frontend usa **HTML5, CSS3 e JavaScript nativo**, sem React, TypeScript, Vite, Tailwind ou bundler. O backend FastAPI existente foi preservado.
 
-## 📋 Visão geral
+## Estrutura
 
-O TestMe é uma aplicação web (com preparação para futuro app mobile / PWA) dividida em duas partes:
+```text
+projeto/
+├── testeme-main/              # frontend estático (HTML, CSS e JS nativo)
+│   ├── index.html
+│   ├── login.html             # compatibilidade: redireciona para a tela de login
+│   ├── cadastrar.html         # compatibilidade: redireciona para o cadastro
+│   ├── dashboard.html         # compatibilidade: redireciona para o histórico
+│   ├── styles/game.css
+│   └── src/scripts/game.js
+└── apisme-main/               # backend FastAPI e serviços existentes
+    ├── src/
+    ├── requirements.txt
+    └── .env.example
+```
 
-| Diretório | Papel | Tecnologia |
-|-----------|-------|------------|
-| `frontend/` | Interface do jogo (mapa, personagem, spots, atividades, perfil, ranking) | React + TypeScript + Vite + Tailwind CSS + Phaser |
-| `apis-me/` | Backend: APIs REST, autenticação, banco de dados, rankings, IA | Python + FastAPI + SQLModel/SQLAlchemy + PostgreSQL (com fallback SQLite) |
+## O que está funcional no frontend
 
-### Repositório original
-Este repositório já possuía uma estrutura inicial (HTML/CSS/JS vanilla na raiz e pasta `src/`). Essa estrutura foi **preservada** e a nova aplicação gamificada foi organizada em `frontend/`, enquanto o backend `apis-me/` é mantido como aplicação separada (conforme orientação do repositório).
+- Cadastro e login usando `/testeme/cadastrar` e `/testeme/logar`.
+- Sessão mantida na aba do navegador (`sessionStorage`), com logout.
+- Carregamento do usuário, personagem, progresso, mapa, spots e NPCs pela API.
+- Mapa 2D com personagem, câmera que acompanha a movimentação, limites do cenário e controles WASD/setas.
+- Controles direcionais para dispositivos móveis.
+- Interação com spots próximos e NPCs; o spot só inicia atividade quando está disponível no retorno do servidor.
+- Seleção de resposta, envio para `/activities/{id}/submit` e exibição de XP, moedas, evolução e explicação retornados pelo servidor.
+- Atualização de personagem/progresso/tempo de regeneração após concluir corretamente.
+- Ranking global e histórico de atividades.
+- Layout responsivo para desktop e celular.
 
-## 🗺️ Conceito do jogo
+As recompensas e os tempos de regeneração não são calculados pelo frontend: a interface apresenta o resultado devolvido pelo backend.
 
-- **Mundo do Conhecimento**: mapa top-down 2D explorável com câmera que segue o personagem.
-- **Personagem**: criado pelo usuário, com nome, avatar, nível, XP e moedas; progresso salvo no banco.
-- **Spots**: pontos de atividade espalhados pelo mapa (comum, incomum, raro, épico, lendário) com categorias de conhecimento e **cooldown controlado pelo servidor**.
-- **Atividades**: múltipla escolha, verdadeiro/falso, resposta aberta, quebra-cabeças; geradas também por IA (com fallback estático).
-- **Progressão**: XP, níveis, moedas, conquistas, missões, streak.
-- **Ranking**: geral, semanal e mensal, pontuação validada pelo backend (anti-manipulação).
-- **NPCs**: guia, professor, desafiante, explorador (identificados como controlados pelo sistema).
-- **Autenticação**: cadastro, login, logout, verificação de e-mail, recuperação de senha, senhas hasheadas (bcrypt), JWT.
-- **E-mails**: serviço SMTP independente com templates (confirmação de cadastro, redefinição de senha); modo mock quando SMTP não configurado.
-- **IA**: camada independente de integração (`AI_PROVIDER`, `AI_API_KEY`, `AI_MODEL`); credenciais só no backend; fallback para atividades pré-cadastradas.
+## Executar localmente
 
-## 🚀 Como executar (local)
+### 1. Backend
 
-### Pré-requisitos
-- Node.js ≥ 18 (frontend)
-- Python ≥ 3.10 + pip (backend)
-- PostgreSQL (recomendado) — o backend aceita `DATABASE_URL` ou variáveis `DB_*`. Sem banco configurado, usa SQLite local (`apisme.db`).
-
-### 1) Backend (apis-me)
+Requer Python 3.10 ou superior.
 
 ```bash
-cd /home/david/Documentos/davidsousadev/apisme
-
-python3 -m venv venv
-source venv/bin/activate
+cd apisme-main
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
+cp .env.example .env             # Windows: copy .env.example .env
+```
 
-cp .env.example .env   # edite DATABASE_URL / DB_* / SECRET_KEY / SMTP_*
+Edite `.env` e defina uma `SECRET_KEY` própria. O exemplo é apenas para desenvolvimento local. Sem `DATABASE_URL`, o projeto usa SQLite local.
 
+```bash
 uvicorn src.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-O banco é inicializado automaticamente (`create_all`) e dados iniciais (spots, atividades, conquistas, missões, NPCs) são semeados via `src/seed.py`.
+A API e a documentação ficam disponíveis em:
 
-Documentação automática da API: `http://127.0.0.1:8000/docs`
+- API: `http://127.0.0.1:8000/`
+- Swagger: `http://127.0.0.1:8000/docs`
 
-### 2) Frontend (frontend/)
+O backend inicializa as tabelas e chama `src/seed.py` ao iniciar a aplicação.
+
+### 2. Frontend
+
+Em outro terminal:
 
 ```bash
-cd /home/david/Documentos/davidsousadev/testeme/frontend
-
-npm install
-
-# cp .env.example .env   # ajuste VITE_API_URL se necessário
-
-npm run dev            # http://127.0.0.1:5173
-
-npm run build          # gera a pasta dist/
+cd testeme-main
+python -m http.server 5500
 ```
 
-O `VITE_API_URL` deve apontar para o backend (padrão `http://127.0.0.1:8000/testeme`).
+Abra `http://127.0.0.1:5500`.
 
-### 3) Fluxo de uso
-1. Acesse o frontend.
-2. Cadastre-se (nome, nick, senha, e-mail opcional).
-3. Faça login, crie seu personagem e entre no mapa.
-4. Movimente com WASD/setas (desktop) e interaja com os spots (E / Espaço).
-5. Responda atividades, ganhe XP/moedas, suba de nível e consulte o ranking e perfil.
+Por padrão, o frontend aponta para a API publicada em `https://apisme.vercel.app/testeme`. Para usar o backend local, troque o valor de `content` na meta `testme-api` de `index.html` para `http://127.0.0.1:8000/testeme`, ou informe a API na URL:
 
-## 🧪 Testes
-
-- **Backend**: testes de autenticação, permissões, APIs, persistência, cooldown, recompensas, ranking e validação.
-- **Frontend**: testes de componentes, navegação, responsividade, autenticação, interação com o mapa e movimentação.
-- **E2E**: fluxos principais (cadastro/login → personagem → atividade → ranking).
-
-### Resultado da validação realizada (este repositório)
-- Backend rodando com sucesso em `http://127.0.0.1:8000` (endpoints `/testeme/*` respondendo: cadastro, login, personagem, spots, atividades, submissão, histórico, progresso, conquistas, ranking, NPCs).
-- Frontend compilado com TypeScript sem erros e build de produção gerado em `frontend/dist/`.
-- Servidor de desenvolvimento frontend disponível em `http://127.0.0.1:5173`.
-
-## 🔐 Segurança
-
-- Senhas hasheadas com bcrypt (não armazenadas em texto puro).
-- JWT de acesso/refresh; tokens sensíveis apenas no backend.
-- CORS configurado; rate limiting recomendado em produção.
-- Validação de entrada no backend; proteção contra SQL Injection (ORM) e XSS.
-- Cooldown de spots e validação de recompensa feitos **no servidor** (nunca confiando no cliente).
-- `.env` e `.env.*` não são versionados (veja `.gitignore`).
-
-## 📦 Estrutura final (resumo)
-
-```
-testeme/                      # repositório (legacy preservado + frontend)
-├── index.html / login.html / ...   # legacy (preservado)
-├── src/                                        # legacy (preservado)
-├── frontend/                                   # NOVO: app React + Vite + Phaser
-│   ├── src/
-│   │   ├── main.tsx, App.tsx, index.css
-│   │   ├── contexts/AuthContext.tsx
-│   │   ├── lib/api.ts
-│   │   ├── pages/ (Landing, Login, Register, GameWorld, Profile, Ranking)
-│   │   └── ...
-│   ├── tailwind.config.js, postcss.config.js
-│   ├── .env.example
-│   ├── package.json
-│   └── dist/                                   # build de produção
-├── README.md
-└── .gitignore
-
-apis-me/                                        # backend separado (irmão)
-├── src/
-│   ├── main.py, database.py, auth_utils.py, email_service.py, game_logic.py, seed.py
-│   ├── models/ (usuários, personagens, spots, atividades, conquistas, NPCs, e-mail, auditoria...)
-│   ├── controllers/ (auth, personagens, mundo/spots, atividades, progresso, ranking, IA, NPCs, e-mail)
-│   └── ...
-├── requirements.txt
-├── .env / .env.example
-└── vercel.json
+```text
+http://127.0.0.1:5500/?api=http://127.0.0.1:8000/testeme
 ```
 
-## 🗺️ Roadmap futura
+A opção por query string é útil para desenvolvimento; em produção, configure a meta `testme-api` para a URL real da API.
 
-- Aplicativo mobile Android/iOS e PWA.
-- Notificações push (Firebase Cloud Messaging).
-- Multijogador em tempo real (personagens simultâneos, chat, grupos, eventos coletivos).
-- Novas regiões, raridades de spots, eventos temporários (ex.: "Portal do Conhecimento"), temporadas e desafios entre jogadores.
-- IA gerando atividades, puzzles, dicas e diálogos de NPCs contextualizados.
+## Fluxo principal de jogo
 
-## 🤝 Contribuição
+1. Criar uma conta ou entrar com nick e senha.
+2. A API carrega o personagem, o progresso, os spots e os NPCs.
+3. Mover o personagem com WASD/setas (ou controles direcionais em telas touch).
+4. Aproximar-se de um spot disponível e usar `E` ou o botão de interação.
+5. Responder à atividade e enviar a resposta ao backend.
+6. Receber o resultado validado pelo servidor e atualizar XP, nível, moedas e cooldown.
 
-Veja `CONTRIBUTING.md`. Este projeto é open-source (LICENSE).
+## Testes
 
----
+Validação estática do frontend:
 
-Autor: David Sousa — [@davidsousadev](https://github.com/davidsousadev)
+```bash
+node --check src/scripts/game.js
+python tests/test_frontend_static.py
+```
+
+Os testes estáticos verificam o carregamento do JavaScript clássico, referências do DOM, páginas legadas e a existência das rotas de API consumidas no backend.
+
+Testes do backend (após instalar dependências):
+
+```bash
+cd ../apisme-main
+pytest -q
+```
+
+O teste E2E do fluxo de jogo deve ser executado com backend e banco de dados disponíveis. Não considere o fluxo validado apenas pela compilação/sintaxe do JavaScript.
+
+## Configuração da API em produção
+
+O frontend é estático e não precisa de processo de build nem instalação de dependências npm. Para apontá-lo a outro backend, altere `meta[name="testme-api"]` em `index.html`. Configure CORS no backend para a origem do frontend e restrinja `allow_origins`/`allowed_hosts` no ambiente de produção.
+
+## Observações sobre o estado atual
+
+- O backend foi mantido separado e não foi reescrito nesta migração.
+- Os endpoints do TestMe já existentes são reutilizados; recursos de autenticação ainda não implementados no backend (por exemplo, refresh token efetivo) não são simulados pelo frontend.
+- A sessão frontend usa `sessionStorage` para evitar persistir o token depois que a sessão da aba termina. Isso não substitui cookies `HttpOnly` nem corrige a estratégia de sessão do backend.
+- Ranking semanal/mensal, multiplayer em tempo real e geração de conteúdo por provedor externo continuam fora do MVP.
