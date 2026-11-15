@@ -72,10 +72,10 @@ python -m http.server 5500
 
 Abra `http://127.0.0.1:5500`.
 
-Por padrão, o frontend aponta para a API publicada em `http://127.0.0.1:8000/testeme`. Para usar o backend local, troque o valor de `content` na meta `testme-api` de `index.html` para `http://127.0.0.1:8000/testeme`, ou informe a API na URL:
+Por padrão, o frontend aponta para a API publicada em `https://apisme.vercel.app/testeme`. Para usar o backend local, troque o valor de `content` na meta `testme-api` de `index.html` para `https://apisme.vercel.app/testeme`, ou informe a API na URL:
 
 ```text
-http://127.0.0.1:5500/?api=http://127.0.0.1:8000/testeme
+http://127.0.0.1:5500/?api=https://apisme.vercel.app/testeme
 ```
 
 A opção por query string é útil para desenvolvimento; em produção, configure a meta `testme-api` para a URL real da API.

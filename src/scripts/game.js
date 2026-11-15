@@ -3,10 +3,10 @@
 
   const metaApi = document.querySelector('meta[name="testme-api"]')?.content;
   const queryApi = new URLSearchParams(window.location.search).get('api');
-  const API_URL = (queryApi || metaApi || '[http://127.0.0.1:8000/testeme](http://127.0.0.1:8000/testeme)').replace(/\/$/, '');
+  const API_URL = (queryApi || metaApi || '[https://apisme.vercel.app/testeme](https://apisme.vercel.app/testeme)').replace(/\/$/, '');
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
-  
+
   const state = {
     token: sessionStorage.getItem('testme_access_token') || '',
     user: null,
@@ -38,7 +38,7 @@
 
   function toast(message, type = 'info') {
     const node = document.createElement('div');
-    node.className = `toast ${ type } `;
+    node.className = `toast ${type} `;
     node.textContent = message;
     $('#toastRegion').appendChild(node);
     window.setTimeout(() => node.remove(), 4200);
@@ -47,13 +47,13 @@
   async function api(path, options = {}) {
     const headers = { ...(options.headers || {}) };
     if (options.body && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
-    if (state.token && options.auth !== false) headers.Authorization = `Bearer ${ state.token } `;
-    const response = await fetch(`${ API_URL }${ path } `, { ...options, headers });
+    if (state.token && options.auth !== false) headers.Authorization = `Bearer ${state.token} `;
+    const response = await fetch(`${API_URL}${path} `, { ...options, headers });
     const contentType = response.headers.get('content-type') || '';
     const data = contentType.includes('application/json') ? await response.json() : await response.text();
-    
+
     if (!response.ok || (options.auth !== false && state.token && data && !Array.isArray(data) && typeof data === 'object' && data.detail && /não autorizado|nao autorizado|token inválido|token invalido|token expirado/i.test(data.detail))) {
-      const message = data && data.detail ? data.detail : `Falha na API(${ response.status })`;
+      const message = data && data.detail ? data.detail : `Falha na API(${response.status})`;
       const error = new Error(message);
       error.status = response.status;
       throw error;
@@ -65,7 +65,7 @@
     const el = $('#connectionStatus');
     el.classList.toggle('online', status === 'online');
     el.classList.toggle('offline', status === 'offline');
-    el.innerHTML = `< i ></ > ${ escapeHTML(label) } `;
+    el.innerHTML = `< i ></ > ${escapeHTML(label)} `;
   }
 
   function showAuth(tab = 'login') {
@@ -82,7 +82,7 @@
     $('#topNick').textContent = state.user?.nick || 'Aventureiro';
     $('#mapPlayerName').textContent = state.character?.name || state.user?.nome || 'Você';
     $('#playerName').textContent = state.character?.name || state.user?.nome || 'Aventureiro';
-    $('#playerNick').textContent = `@${ state.user?.nick || '' } `;
+    $('#playerNick').textContent = `@${state.user?.nick || ''} `;
   }
 
   function selectAuthTab(tab) {
@@ -142,10 +142,10 @@
     const email = $('#registerEmail').value.trim();
     const password = $('#registerPassword').value;
     const confirm = $('#registerPasswordConfirm').value;
-    
+
     if (password !== confirm) return toast('As senhas não conferem.', 'error');
     if (password.length < 8) return toast('Use uma senha com pelo menos 8 caracteres.', 'error');
-    
+
     submit.disabled = true;
     try {
       await api('/cadastrar', {
@@ -172,21 +172,21 @@
     setConnection('online', 'API conectada');
     try {
       const [user, character, progress, map, spots, npcs] = await Promise.all([
-        api('/users/me'), 
-        api('/characters/me'), 
-        api('/progress/me'), 
-        api('/world/map', { auth: false }), 
-        api('/world/spots', { auth: false }), 
+        api('/users/me'),
+        api('/characters/me'),
+        api('/progress/me'),
+        api('/world/map', { auth: false }),
+        api('/world/spots', { auth: false }),
         api('/npcs', { auth: false }),
       ]);
-      
+
       state.user = { nick: user.nick, nome: user.nome, email: user.email || null };
       state.character = character;
       state.progress = progress;
       state.mapSize = { width: Number(map.width) || 2000, height: 1200 };
       state.spots = Array.isArray(spots) ? spots : [];
       state.npcs = Array.isArray(npcs) ? npcs : [];
-      
+
       showGame();
       renderProgress();
       renderWorldObjects();
@@ -199,7 +199,7 @@
       setConnection('offline', 'Falha na autenticação');
       clearTokens();
       showAuth('login');
-      toast(`Não foi possível carregar seu personagem: ${ error.message } `, 'error');
+      toast(`Não foi possível carregar seu personagem: ${error.message} `, 'error');
       throw error;
     }
   }
@@ -211,135 +211,135 @@
     const next = Number(character.xp_for_next_level ?? progress.xp_for_next_level ?? 316);
     const level = Number(character.level ?? progress.level ?? 1);
     const coins = Number(character.coins ?? progress.coins ?? 0);
-    
+
     $('#playerLevel').textContent = level;
-    $('#xpLabel').textContent = `${ xp } / ${next} XP`;
-$('#playerXp').textContent = xp.toLocaleString('pt-BR');
-$('#playerCoins').textContent = coins.toLocaleString('pt-BR');
-$('#xpBar').style.width = `${Math.min(100, next > 0 ? (xp / next) * 100 : 0)}%`;
-$('#activitiesDone').textContent = progress.activities_completed ?? 0;
-$('#achievementsDone').textContent = progress.achievements_unlocked ?? 0;
-$('#firstQuestProgress').style.width = `${(progress.activities_completed ?? 0) > 0 ? 100 : 0}%`;
-$('#firstQuestLabel').textContent = `${Math.min(progress.activities_completed ?? 0, 1)}/1 atividade concluída`;
-$('#playerAvatar').textContent = '♟';
-$('#topAvatar').textContent = '✦';
+    $('#xpLabel').textContent = `${xp} / ${next} XP`;
+    $('#playerXp').textContent = xp.toLocaleString('pt-BR');
+    $('#playerCoins').textContent = coins.toLocaleString('pt-BR');
+    $('#xpBar').style.width = `${Math.min(100, next > 0 ? (xp / next) * 100 : 0)}%`;
+    $('#activitiesDone').textContent = progress.activities_completed ?? 0;
+    $('#achievementsDone').textContent = progress.achievements_unlocked ?? 0;
+    $('#firstQuestProgress').style.width = `${(progress.activities_completed ?? 0) > 0 ? 100 : 0}%`;
+    $('#firstQuestLabel').textContent = `${Math.min(progress.activities_completed ?? 0, 1)}/1 atividade concluída`;
+    $('#playerAvatar').textContent = '♟';
+    $('#topAvatar').textContent = '✦';
   }
 
-function renderWorldObjects() {
-  const container = $('#worldObjects');
-  container.innerHTML = '';
+  function renderWorldObjects() {
+    const container = $('#worldObjects');
+    container.innerHTML = '';
 
-  state.spots.forEach(spot => {
-    const rarity = rarityRank[spot.rarity] ? spot.rarity : 'common';
-    const marker = document.createElement('button');
-    marker.type = 'button';
-    marker.className = `map-object spot ${rarity} ${spot.available ? '' : 'unavailable'}`;
-    marker.style.left = `${Number(spot.x) || 0}px`;
-    marker.style.top = `${Number(spot.y) || 0}px`;
-    marker.dataset.kind = 'spot';
-    marker.dataset.id = spot.id;
-    marker.title = `${spot.name} — ${spot.available ? 'Disponível' : 'Em regeneração'}`;
-    marker.innerHTML = `<span class="spot-symbol">${rarityIcons[rarity]}</span><span class="map-object-label">${escapeHTML(spot.name)}</span>`;
-    marker.addEventListener('click', () => focusTarget({ kind: 'spot', item: spot }));
-    container.appendChild(marker);
-  });
+    state.spots.forEach(spot => {
+      const rarity = rarityRank[spot.rarity] ? spot.rarity : 'common';
+      const marker = document.createElement('button');
+      marker.type = 'button';
+      marker.className = `map-object spot ${rarity} ${spot.available ? '' : 'unavailable'}`;
+      marker.style.left = `${Number(spot.x) || 0}px`;
+      marker.style.top = `${Number(spot.y) || 0}px`;
+      marker.dataset.kind = 'spot';
+      marker.dataset.id = spot.id;
+      marker.title = `${spot.name} — ${spot.available ? 'Disponível' : 'Em regeneração'}`;
+      marker.innerHTML = `<span class="spot-symbol">${rarityIcons[rarity]}</span><span class="map-object-label">${escapeHTML(spot.name)}</span>`;
+      marker.addEventListener('click', () => focusTarget({ kind: 'spot', item: spot }));
+      container.appendChild(marker);
+    });
 
-  state.npcs.forEach(npc => {
-    const marker = document.createElement('button');
-    marker.type = 'button';
-    marker.className = 'map-object npc';
-    marker.style.left = `${Number(npc.x) || 0}px`;
-    marker.style.top = `${Number(npc.y) || 0}px`;
-    marker.dataset.kind = 'npc';
-    marker.dataset.id = npc.id;
-    marker.title = npc.name;
-    marker.innerHTML = `<span class="spot-symbol">♙</span><span class="map-object-label">${escapeHTML(npc.name)}</span>`;
-    marker.addEventListener('click', () => focusTarget({ kind: 'npc', item: npc }));
-    container.appendChild(marker);
-  });
-}
-
-function renderQuestPanel() {
-  const spots = [...state.spots].sort((a, b) => (rarityRank[b.rarity] || 1) - (rarityRank[a.rarity] || 1)).slice(0, 5);
-  $('#nearbySpots').innerHTML = spots.length ? spots.map(spot => {
-    const available = Boolean(spot.available);
-    const rare = ['rare', 'epic', 'legendary'].includes(spot.rarity);
-    return `<button class="nearby-spot ${rare ? 'rare' : ''}" type="button" data-spot-id="${Number(spot.id)}"><span class="nearby-spot-icon">${rarityIcons[spot.rarity] || '✧'}</span><span><strong>${escapeHTML(spot.name)}</strong><small>${escapeHTML(spot.category)} · ${rarityNames[spot.rarity] || 'Comum'}</small></span><span class="spot-state ${available ? '' : 'cooldown'}">${available ? 'Disponível' : 'Regenerando'}</span></button>`;
-  }).join('') : '<div class="empty-note">Nenhum spot cadastrado no mundo.</div>';
-
-  $$('.nearby-spot').forEach(button => button.addEventListener('click', () => {
-    const spot = state.spots.find(item => Number(item.id) === Number(button.dataset.spotId));
-    if (spot) focusTarget({ kind: 'spot', item: spot });
-  }));
-
-  $('#npcList').innerHTML = state.npcs.length ? state.npcs.slice(0, 4).map(npc => `<div class="npc-row"><span class="npc-mini">♙</span><span><strong>${escapeHTML(npc.name)}</strong><small>${escapeHTML(npc.npc_type || 'Habitante')} · NPC</small></span></div>`).join('') : '<div class="empty-note">Nenhum NPC encontrado.</div>';
-}
-
-function setView(view) {
-  const map = view === 'world';
-  state.keys.clear();
-  $('#worldView').classList.toggle('hidden', !map);
-  $('#rankingView').classList.toggle('hidden', view !== 'ranking');
-  $('#historyView').classList.toggle('hidden', view !== 'history');
-
-  $$('.side-action').forEach(button => button.classList.toggle('active', button.dataset.view === view));
-
-  if (map) {
-    $('#stageTitle').textContent = 'Bosque das Descobertas';
-    $('#stageSubtitle').textContent = 'Explore, encontre um spot e coloque seu conhecimento à prova.';
-  } else if (view === 'ranking') {
-    $('#stageTitle').textContent = 'Ranking global';
-    $('#stageSubtitle').textContent = 'Acompanhe a evolução dos aventureiros.';
-    loadRanking();
-  } else {
-    $('#stageTitle').textContent = 'Meu histórico';
-    $('#stageSubtitle').textContent = 'Suas tentativas e atividades concluídas.';
-    loadHistory();
+    state.npcs.forEach(npc => {
+      const marker = document.createElement('button');
+      marker.type = 'button';
+      marker.className = 'map-object npc';
+      marker.style.left = `${Number(npc.x) || 0}px`;
+      marker.style.top = `${Number(npc.y) || 0}px`;
+      marker.dataset.kind = 'npc';
+      marker.dataset.id = npc.id;
+      marker.title = npc.name;
+      marker.innerHTML = `<span class="spot-symbol">♙</span><span class="map-object-label">${escapeHTML(npc.name)}</span>`;
+      marker.addEventListener('click', () => focusTarget({ kind: 'npc', item: npc }));
+      container.appendChild(marker);
+    });
   }
-}
 
-function distance(a, b) { return Math.hypot(Number(a.x) - Number(b.x), Number(a.y) - Number(b.y)); }
+  function renderQuestPanel() {
+    const spots = [...state.spots].sort((a, b) => (rarityRank[b.rarity] || 1) - (rarityRank[a.rarity] || 1)).slice(0, 5);
+    $('#nearbySpots').innerHTML = spots.length ? spots.map(spot => {
+      const available = Boolean(spot.available);
+      const rare = ['rare', 'epic', 'legendary'].includes(spot.rarity);
+      return `<button class="nearby-spot ${rare ? 'rare' : ''}" type="button" data-spot-id="${Number(spot.id)}"><span class="nearby-spot-icon">${rarityIcons[spot.rarity] || '✧'}</span><span><strong>${escapeHTML(spot.name)}</strong><small>${escapeHTML(spot.category)} · ${rarityNames[spot.rarity] || 'Comum'}</small></span><span class="spot-state ${available ? '' : 'cooldown'}">${available ? 'Disponível' : 'Regenerando'}</span></button>`;
+    }).join('') : '<div class="empty-note">Nenhum spot cadastrado no mundo.</div>';
 
-function allTargets() {
-  return [
-    ...state.spots.map(item => ({ kind: 'spot', item })),
-    ...state.npcs.map(item => ({ kind: 'npc', item })),
-  ];
-}
+    $$('.nearby-spot').forEach(button => button.addEventListener('click', () => {
+      const spot = state.spots.find(item => Number(item.id) === Number(button.dataset.spotId));
+      if (spot) focusTarget({ kind: 'spot', item: spot });
+    }));
 
-function getNearestTarget() {
-  let nearest = null;
-  let shortest = Infinity;
-  allTargets().forEach(target => {
-    const d = distance(state.player, target.item);
-    if (d < shortest) { shortest = d; nearest = { ...target, distance: d }; }
-  });
-  return nearest && nearest.distance <= 108 ? nearest : null;
-}
+    $('#npcList').innerHTML = state.npcs.length ? state.npcs.slice(0, 4).map(npc => `<div class="npc-row"><span class="npc-mini">♙</span><span><strong>${escapeHTML(npc.name)}</strong><small>${escapeHTML(npc.npc_type || 'Habitante')} · NPC</small></span></div>`).join('') : '<div class="empty-note">Nenhum NPC encontrado.</div>';
+  }
 
-function updateNearby() {
-  const nearest = getNearestTarget();
-  state.nearest = nearest;
+  function setView(view) {
+    const map = view === 'world';
+    state.keys.clear();
+    $('#worldView').classList.toggle('hidden', !map);
+    $('#rankingView').classList.toggle('hidden', view !== 'ranking');
+    $('#historyView').classList.toggle('hidden', view !== 'history');
 
-  $$('.map-object').forEach(marker => {
-    marker.classList.toggle('nearest', Boolean(nearest && marker.dataset.kind === nearest.kind && Number(marker.dataset.id) === Number(nearest.item.id)));
-  });
+    $$('.side-action').forEach(button => button.classList.toggle('active', button.dataset.view === view));
 
-  const button = $('#interactButton');
-  if (!nearest) {
-    $('#nearbyTitle').textContent = 'Explore o mapa';
-    $('#nearbyText').textContent = 'Aproxime-se de um ponto de atividade ou NPC.';
-    button.disabled = true;
-    button.innerHTML = 'Interagir <kbd>E</kbd>';
-  } else if (nearest.kind === 'npc') {
-    $('#nearbyTitle').textContent = nearest.item.name;
-    $('#nearbyText').textContent = 'Um habitante do mundo está por perto. Converse para receber uma dica.';
-    button.disabled = false;
-    button.innerHTML = 'Conversar <kbd>E</kbd>';
-  } else {
-    $('#nearbyTitle').textContent = nearest.item.name;
-    $('#nearbyText').textContent = nearest.item.available
-      ? `${nearest.item.category} · ${rarityNames[nearest.item.rarity] || 'Comum'} · +${nearest.item.reward_x
+    if (map) {
+      $('#stageTitle').textContent = 'Bosque das Descobertas';
+      $('#stageSubtitle').textContent = 'Explore, encontre um spot e coloque seu conhecimento à prova.';
+    } else if (view === 'ranking') {
+      $('#stageTitle').textContent = 'Ranking global';
+      $('#stageSubtitle').textContent = 'Acompanhe a evolução dos aventureiros.';
+      loadRanking();
+    } else {
+      $('#stageTitle').textContent = 'Meu histórico';
+      $('#stageSubtitle').textContent = 'Suas tentativas e atividades concluídas.';
+      loadHistory();
+    }
+  }
+
+  function distance(a, b) { return Math.hypot(Number(a.x) - Number(b.x), Number(a.y) - Number(b.y)); }
+
+  function allTargets() {
+    return [
+      ...state.spots.map(item => ({ kind: 'spot', item })),
+      ...state.npcs.map(item => ({ kind: 'npc', item })),
+    ];
+  }
+
+  function getNearestTarget() {
+    let nearest = null;
+    let shortest = Infinity;
+    allTargets().forEach(target => {
+      const d = distance(state.player, target.item);
+      if (d < shortest) { shortest = d; nearest = { ...target, distance: d }; }
+    });
+    return nearest && nearest.distance <= 108 ? nearest : null;
+  }
+
+  function updateNearby() {
+    const nearest = getNearestTarget();
+    state.nearest = nearest;
+
+    $$('.map-object').forEach(marker => {
+      marker.classList.toggle('nearest', Boolean(nearest && marker.dataset.kind === nearest.kind && Number(marker.dataset.id) === Number(nearest.item.id)));
+    });
+
+    const button = $('#interactButton');
+    if (!nearest) {
+      $('#nearbyTitle').textContent = 'Explore o mapa';
+      $('#nearbyText').textContent = 'Aproxime-se de um ponto de atividade ou NPC.';
+      button.disabled = true;
+      button.innerHTML = 'Interagir <kbd>E</kbd>';
+    } else if (nearest.kind === 'npc') {
+      $('#nearbyTitle').textContent = nearest.item.name;
+      $('#nearbyText').textContent = 'Um habitante do mundo está por perto. Converse para receber uma dica.';
+      button.disabled = false;
+      button.innerHTML = 'Conversar <kbd>E</kbd>';
+    } else {
+      $('#nearbyTitle').textContent = nearest.item.name;
+      $('#nearbyText').textContent = nearest.item.available
+        ? `${nearest.item.category} · ${rarityNames[nearest.item.rarity] || 'Comum'} · +${nearest.item.reward_x
         } XP base` : 'Este ponto está regenerando. Explore outro local.';
       button.disabled = !nearest.item.available;
       button.innerHTML = nearest.item.available ? 'Iniciar atividade <kbd>E</kbd>' : 'Em regeneração';
